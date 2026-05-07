@@ -17,3 +17,64 @@
 # display the values that the model got wrong
 
 # visualize the data using the confusion matrix
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+
+iris = load_iris()
+
+#print(iris.DESCR)
+print(iris.data.shape)
+print(iris.target.shape)
+
+
+data_train, data_test, target_train, target_test = train_test_split(
+    iris.data, iris.target, random_state=11
+)
+
+print(iris.data.shape)
+print(iris.target.shape)
+
+data_train, data_test, target_train, target_test = train_test_split(
+    iris.data, iris.target, random_state=11
+)
+print(data_train.shape)
+print(data_test.shape)
+print(target_train.shape)
+print(target_test.shape) 
+
+from sklearn.neighbors import KNeighborsClassifier
+
+knn = KNeighborsClassifier()
+
+knn.fit(X=data_train, y=target_train)
+predicted = knn.predict(X=data_test)
+
+expected = target_test
+
+print(predicted[:20])
+print(expected[:20])
+
+print(iris.target_names)
+
+predicted = [iris.target_names[x] for x in predicted]
+expected = [iris.target_names[x] for x in expected]
+
+wrong = [(p,e) for (p,e) in zip(predicted,expected) if p != e]
+print(wrong)
+print(format(knn.score(data_test, target_test), ".2%"))
+
+from sklearn.metrics import confusion_matrix
+
+confusion = confusion_matrix(y_true=expected, y_pred=predicted)
+
+import pandas as pd 
+import seaborn as sns 
+import matplotlib.pyplot as plt2
+
+confusion_df= pd.DataFrame(confusion, index=iris.target_names, columns=iris.target_names)
+
+figure = plt2.figure()
+axes = sns.heatmap(confusion_df, annot=True, cmap=plt2.cm.nipy_spectral_r)
+plt2.xlabel("Expected")
+plt2.ylabel("Predicted")
+plt2.show()
